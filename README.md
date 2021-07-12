@@ -1,4 +1,4 @@
-#Clusterization Scores
+# Clusterization Scores
 
 this project includes three of the main measures for evaluating clusterings based on ground truth, purity, collocation, and the harmonic mean between purity and collocation.
 
