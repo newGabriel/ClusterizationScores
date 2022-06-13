@@ -13,23 +13,26 @@ import numpy as np
     
 '''
 def purity_score(y,y_pre):
-    c = list()
-    for i in range(max(y_pre)+1):
-        c.append(list())
+    m = {}
+    for i in range(len(y)): # traverse the results matrix and store the objects that belong to each cluster on a map
+        if y_pre[i] in m: 
+            m[y_pre[i]].append(i)
+        else:
+            m[y_pre[i]] = [i]
+     
+    tot = 0
     
-    for i in range(len(y_pre)):
-        c[y_pre[i]].append(i)
-    
-    t = 0
-    for i in c:
-        p = np.zeros(y.max())
-        for j in i:
-            p[y[j]-1] += 1
-        
-        t += p.max()
-    
-    pr = t/float(len(y))
-    return pr
+    for i in m: # check the most common class in each of the clusters
+        c = {}
+        mx = 0 # number of members of the most common class in the cluster
+        for j in m[i]: 
+            if y[j] in c:
+                c[y[j]] += 1
+            else:
+                c[y[j]] = 1
+            mx = max(mx,c[y[j]])
+        tot += mx
+    return tot/len(y)
    
  
 '''collocation_score(y,y_pre)
@@ -44,25 +47,7 @@ def purity_score(y,y_pre):
     
 '''
 def collocation_score(y,y_pre):
-    c = list()
-    for i in range(max(y_pre)+1):
-        c.append(list())
-    
-    for i in range(len(y_pre)):
-        c[y_pre[i]].append(i)
-        
-    t = 0
-    y1 = np.array(range(len(y)))
-    y1 = y1.reshape((41,int(len(y)/41)))
-    for i in y1:
-        p = np.zeros(len(c))
-        for j in i:
-            for k in range(len(c)):
-                if j in c[k]:
-                    p[k] += 1
-        t += p.max()
-    pr = t/float(len(y))
-    return pr
+    return purity_score(y_pre,y) # to calculate the colocation measure just calculate the purity in reverse way 
     
 
 '''harmonicMean_score(y=0,y_pre=0,p=0,c=0)
